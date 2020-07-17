@@ -59,26 +59,40 @@ function []= Corr_analysis(Template, Signal)
 
     %EKG = detrend(Template);
     Cov_Matrix = cov(Template,Signal);
+    Correl = corrcoef(Template,Signal);
     fs = 200;   
 
     [autocor,lags] = xcorr(Signal,'coeff');
     [autocor2,lags2] = xcorr(Template,'coeff');
     
-    subplot(2,1,1);
     figure('name','Auto-Correlation Graph - With all peaks');
+    subplot(2,2,[1 3]); 
     plot(lags/fs,autocor,'b');
-    %grid on
+    grid on;
     hold on
     
     plot(lags2/fs,autocor2,'r');
-    xlabel('Lag (Sec)')
-    ylabel('Auto-Correlation')
-    title('Auto-Correlation Graph - With all peaks')
-    axis([-1 1 -0.1 1])
-    axis tight
-    hold off
+    hold off;
+    xlabel('Lag (Sec)');
+    ylabel('Auto-Correlation');
+    title('Auto-Correlation Graph - With all peaks');
+    axis([-1 1 -0.1 1]);
+    axis tight;
     
-    subplot(2,1,2);
-    imagesc(Cov_Matrix);
-
+    h = subplot(2,2,2);
+    hPos = get(subplot(2,2,2), 'Position');
+    t = uitable('Data', Cov_Matrix, 'ColumnName', {'A', 'B'});
+    t.Units = 'Normalized';
+    t.Position = hPos;
+    set(h, 'Visible', 'Off');
+    
+    
+    h = subplot(2,2,2);
+    hPos = get(subplot(2,2,2), 'Position');
+    t = uitable('Data', Cov_Matrix, 'ColumnName', {'A', 'B'});
+    t.Units = 'Normalized';
+    t.Position = hPos;
+    set(h, 'Visible', 'Off');
+    
+    
 end

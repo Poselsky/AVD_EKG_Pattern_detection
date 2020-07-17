@@ -66,7 +66,7 @@ function []= Corr_analysis(Template, Signal)
     [autocor2,lags2] = xcorr(Template,'coeff');
     
     figure('name','Auto-Correlation Graph - With all peaks');
-    subplot(1,2,1);
+    subplot(2,2,[1 3]); 
     plot(lags/fs,autocor,'b');
     grid on;
     hold on
@@ -79,9 +79,20 @@ function []= Corr_analysis(Template, Signal)
     axis([-1 1 -0.1 1]);
     axis tight;
     
-    subplot(1,2,2);
-    Cov_Matrix
-    Correl
+    h = subplot(2,2,2);
+    title('Covarriance matrix');
+    hPos = get(h, 'Position');
+    t = uitable('Data', Cov_Matrix, 'ColumnName', {'Template', 'Signal'});
+    t.Units = 'Normalized';
+    t.Position = hPos;
+    
+    
+    g = subplot(2,2,4);
+    title('Correlation matrix');
+    gPos = get(g, 'Position');
+    ta = uitable('Data', Correl, 'ColumnName', {'Template', 'Signal'});
+    ta.Units = 'Normalized';
+    ta.Position = gPos;
     
     
 end
