@@ -39,3 +39,17 @@ Pomocí korelace, kovariance a statistických ukazatelů (Vašeho výběru) zjis
 "Non centralized image":
 ![Nutné centralizovat](./assets/signal.png)
 
+
+
+## __Skript se nachází ve složce EKG__
+
+## Postup
+Nejprve jsme importovali veškerá data. Pro načtení dat ze souborů *ecg_01.txt* až *ecg_10.txt* jsme vytvořili jsme "jednoduchou" funkci pro načítaní dvojích dat. Tato funkce ještě obsahovala funkci pro vyčištění dat, ve které jsme použili smazání trendu (odstarnění šumu). Po načtení dat jsme použili **korelační** a **kovariační** matici.
+
+
+## Aktivní členové skupiny
+
+ - Oleg MUSIJENKO
+ - Lukáš MATYS
+ - Jiří MÍT
+ - Jakub ŠKRABÁNEK
