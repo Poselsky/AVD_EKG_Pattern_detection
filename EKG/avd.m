@@ -8,6 +8,7 @@ close all;
 %nahrání dat
 %txt musí být ve stejné složce jako script
 EKG = remove_noise(detrend(load ("mujSignal.txt")));
+%{
 [EKG1_1,EKG1_2] = Graph_detrend("ecg_01.txt");
 [EKG2_1,EKG2_2] = Graph_detrend("ecg_02.txt");
 [EKG3_1,EKG3_2] = Graph_detrend("ecg_03.txt");
@@ -18,8 +19,24 @@ EKG = remove_noise(detrend(load ("mujSignal.txt")));
 [EKG8_1,EKG8_2] = Graph_detrend("ecg_08.txt");
 [EKG9_1,EKG9_2] = Graph_detrend("ecg_09.txt");
 [EKG10_1,EKG10_2] = Graph_detrend("ecg_10.txt");
+%}
 
-Corr_analysis(EKG,EKG10_1);
+Ecgs = [];
+
+for i = 1:10
+    [e1 e2] = Graph_detrend(join(["ecg_" num2str(i) ".txt"], ""));
+    Ecgs = [Ecgs e1 e2];
+end
+
+Ecgs(10)
+
+
+for i = 1:20
+    Corr_analysis(EKG,Ecgs(:, i));
+end
+
+
+% Corr_analysis(EKG,Ecgs(:, 2));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                         Funkce                               % 
