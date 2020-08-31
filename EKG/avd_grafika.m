@@ -22,17 +22,19 @@ EKG = remove_noise(detrend(load ("mujSignal.txt")));
 %}
 
 Ecgs = [];
-
+EKGlist= [];
 for i = 1:10
     [e1 e2] = Graph_detrend(join(["ecg_" num2str(i) ".txt"], ""));
     Ecgs = [Ecgs e1 e2];
+    EKGlist = [EKGlist; strcat("EKG",num2str(i),"_1")];
+    EKGlist = [EKGlist; strcat("EKG",num2str(i),"_2")];
 end
 
 Ecgs(10)
 
 
 for i = 1:20
-    Corr_analysis(EKG,Ecgs(:, i));
+    Corr_analysis(EKG,Ecgs(:, i),i,EKGlist(i));
 end
 
 
@@ -72,7 +74,7 @@ function [removed_noise] = remove_noise(EKG)
 end
 
 %funkce na korelaci a covaria?ní matici
-function []= Corr_analysis(Template, Signal)
+function []= Corr_analysis(Template, Signal, pngnum, ekgname)
 
     %EKG = detrend(Template);
     Cov_Matrix = cov(Template,Signal);
@@ -81,35 +83,47 @@ function []= Corr_analysis(Template, Signal)
 
     [autocor,lags] = xcorr(Signal,'coeff');
     [autocor2,lags2] = xcorr(Template,'coeff');
+    Positive_Lags = lags(lags>=0 );
+    Positive_Lags2 = lags2(lags2>=0 );
+
     
-    figure('name','Auto-Correlation Graph - With all peaks');
-    subplot(2,2,[1 3]); 
-    plot(lags/fs,autocor,'b');
+    figure('name','Auto-Correlation Graph - With all peaks','visible', 'off');
+    subplot(2,4,[1 2 3 5 6 7]); 
+    plot(Positive_Lags/fs,autocor(3401:end),'b');
     grid on;
-    hold on
-    
-    plot(lags2/fs,autocor2,'r');
+    hold on;
+    xlim([10 20]);  %omezení x osy
+    set(gcf,'PaperUnits','points','PaperPosition',[0 0 900 400])
+   
+    plot(Positive_Lags2/fs,autocor2(3401:end),'r');
+    textik = {'mean: ',num2str(mean((Template(:)-Signal(:)).^2))};
+    text(14.1,0.72,textik)
+    legend(ekgname,'MujSignal');
     hold off;
     xlabel('Lag (Sec)');
     ylabel('Auto-Correlation');
-    title('Auto-Correlation Graph - With all peaks');
+    title('Auto-Correlation Graph - With all peaks');   
     axis([-1 1 -0.1 1]);
     axis tight;
     
-    h = subplot(2,2,2);
+    h = subplot(2,4,4);
     title('Covarriance matrix');
     hPos = get(h, 'Position');
     t = uitable('Data', Cov_Matrix, 'ColumnName', {'Template', 'Signal'});
     t.Units = 'Normalized';
     t.Position = hPos;
+    set(h,'Xcolor','none','Ycolor','none');
     
     
-    g = subplot(2,2,4);
+    g = subplot(2,4,8);
     title('Correlation matrix');
     gPos = get(g, 'Position');
     ta = uitable('Data', Correl, 'ColumnName', {'Template', 'Signal'});
     ta.Units = 'Normalized';
     ta.Position = gPos;
+    set(g,'Xcolor','none','Ycolor','none');
     
-    
+    %potreba vytvorit slosku grafika pro ukladani grafu
+    nazev = strcat("grafika/",num2str(pngnum),".png");
+    saveas(g,nazev)
 end
